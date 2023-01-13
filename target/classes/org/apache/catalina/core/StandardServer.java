@@ -838,6 +838,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
                 cl = cl.getParent();
             }
         }
+        // 初始化所有的 service 组件，StandardService
         // Initialize our defined Services
         for (Service service : services) {
             // 初始化 service

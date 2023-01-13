@@ -127,13 +127,17 @@ public abstract class LifecycleBase implements Lifecycle {
 
     @Override
     public final synchronized void init() throws LifecycleException {
+        // 判断必须是 NEW 状态，才能进行初始化   可以看下 Lifecycle 的生命周期注释
         if (!state.equals(LifecycleState.NEW)) {
             invalidTransition(Lifecycle.BEFORE_INIT_EVENT);
         }
 
         try {
+            // 状态调整为 INITIALIZING，并触发 INITIALIZING 事件的监听器
             setStateInternal(LifecycleState.INITIALIZING, null, false);
+            // 初始化，模板方法
             initInternal();
+            // 状态调整为 INITIALIZED，并触发 INITIALIZED 事件的监听器
             setStateInternal(LifecycleState.INITIALIZED, null, false);
         } catch (Throwable t) {
             handleSubClassException(t, "lifecycleBase.initFail", toString());

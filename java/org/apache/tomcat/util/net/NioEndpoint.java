@@ -266,6 +266,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
             nioChannels = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
                     socketProperties.getBufferPool());
 
+            // 创建 TaskQueue 对象和 ThreadPoolExecutor 对象
             // Create worker collection
             if (getExecutor() == null) {
                 createExecutor();
@@ -273,6 +274,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
 
             initializeConnectionLatch();
 
+            // 创建并启动 Poller 线程集合
             // Start poller threads
             pollers = new Poller[getPollerThreadCount()];
             for (int i=0; i<pollers.length; i++) {
@@ -282,7 +284,8 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                 pollerThread.setDaemon(true);
                 pollerThread.start();
             }
-
+            // 创建并启动 Acceptor 线程集合
+            // Acceptor 线程是负责服务监听端口的请求接入的
             startAcceptorThreads();
         }
     }
@@ -511,6 +514,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                     try {
                         // Accept the next incoming connection from the server
                         // socket
+                        // 接受客户端请求
                         socket = serverSock.accept();
                     } catch (IOException ioe) {
                         // We didn't get a socket

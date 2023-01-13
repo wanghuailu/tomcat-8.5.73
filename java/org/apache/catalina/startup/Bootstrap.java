@@ -279,7 +279,7 @@ public final class Bootstrap {
         Method method =
             startupInstance.getClass().getMethod(methodName, paramTypes);
         method.invoke(startupInstance, paramValues);
-
+//        startupInstance: {"wait": false, "configFile":"conf/server.xml", "parentClassLoader":"URLClassLoader的实例", ...}
         catalinaDaemon = startupInstance;
     }
 
