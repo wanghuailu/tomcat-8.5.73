@@ -873,6 +873,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
                         new PrivilegedFindClassByName(name);
                     clazz = AccessController.doPrivileged(dp);
                 } else {
+                    // 先在 web 应用目录下查找类
                     clazz = findClassInternal(name);
                 }
             } catch(AccessControlException ace) {
@@ -887,6 +888,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
             }
             if ((clazz == null) && hasExternalRepositories) {
                 try {
+                    // 如果在本地目录没有找到，交给父类加载器（AppClassLoader）去查找
                     clazz = super.findClass(name);
                 } catch(AccessControlException ace) {
                     log.warn(sm.getString("webappClassLoader.securityException", name,
@@ -899,6 +901,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
                     throw e;
                 }
             }
+            // 如果父类加载器（AppClassLoader）也没找到，抛出 ClassNotFoundException
             if (clazz == null) {
                 if (log.isDebugEnabled()) {
                     log.debug("    --> Returning ClassNotFoundException");
